@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wellness Shop | VLCC Personal Care & Cosmetics</title>
+    <meta name="description" content="Browse VLCC's premium range of dermatologist-tested skincare, anti-aging serums, body shaping gels, sunscreens, and hair care products. Available online today.">
+    <!-- FontAwesome & Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Floating Navigation Bar -->
+    <header class="scrolled">
+        <div class="container nav-container">
+            <a href="index.html" class="logo" id="headerLogo">
+                <span>VLCC</span> Wellness
+            </a>
+            <nav>
+                <ul class="nav-links" id="navbarLinks">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="products.html" class="active">Shop Products</a></li>
+                    <li><a href="book.html" class="nav-btn">Book Consultation</a></li>
+                </ul>
+            </nav>
+            <div class="menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Shop Hero -->
+    <section class="services-hero">
+        <div class="container">
+            <span class="section-tag">VLCC Natural Sciences</span>
+            <h1 class="section-title">Dermatologist-Approved Essentials</h1>
+            <p class="section-desc" style="margin-bottom: 0;">Explore clinic-grade formulas crafted by our wellness specialists to preserve your skincare glow and fitness shape at home.</p>
+        </div>
+    </section>
+
+    <!-- Shop Catalog -->
+    <section class="section-padding" style="padding-top: 50px;">
+        <div class="container">
+            <!-- Filter & Search Bar Row -->
+            <div class="shop-filters-row">
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="productSearchInput" placeholder="Search products (e.g. Gold, SPF, Serum)...">
+                </div>
+                
+                <ul class="filter-categories">
+                    <li><button class="filter-btn active" data-filter="all">All Products</button></li>
+                    <li><button class="filter-btn" data-filter="skincare">Skincare</button></li>
+                    <li><button class="filter-btn" data-filter="slimming">Slimming & Shaping</button></li>
+                    <li><button class="filter-btn" data-filter="haircare">Haircare</button></li>
+                </ul>
+            </div>
+
+            <!-- Product Grid -->
+            <div class="grid-3" id="productsGrid">
+                
+                <!-- Gold Kit -->
+                <div class="product-card" data-category="skincare" data-desc="Brings the salon-like glowing skin rejuvenation to your home. Enriched with 24K pure gold dust particles, botanical skin conditioners, and natural aloe extracts to stimulate cellular regeneration, improve skin elasticity, and leave you with an ethereal, long-lasting glow. Package includes cleanser, scrub, massage gel, and face pack.">
+                    <div class="product-image-box">
+                        <svg viewBox="0 0 280 280" width="100%" height="100%">
+                            <rect width="100%" height="100%" fill="#EAE6DB" />
+                            <!-- Gold cosmetic jar vector -->
+                            <ellipse cx="140" cy="190" rx="60" ry="30" fill="#C5A880" />
+                            <rect x="80" y="140" width="120" height="50" fill="#C5A880" rx="10" />
+                            <ellipse cx="140" cy="140" rx="60" ry="20" fill="#EAE6DB" />
+                            <rect x="85" y="115" width="110" height="20" fill="#A88F66" rx="5" />
+                            <text x="140" y="175" fill="#121A2A" font-family="'Outfit', sans-serif" font-size="14" font-weight="700" text-anchor="middle">24K GOLD</text>
+                            <!-- Glow sparks -->
+                            <circle cx="60" cy="90" r="3" fill="#A88F66" />
+                            <circle cx="210" cy="80" r="4" fill="#C5A880" />
+                        </svg>
+                        <span class="product-badge">Best Seller</span>
+                    </div>
+                    <div class="product-content">
+                        <span class="product-category">Skincare / Facial Kits</span>
+                        <h3 class="product-title">Gold Radiant Facial Glow Kit</h3>
+                        <div class="product-footer">
+                            <span class="product-price">₹1,450</span>
+                            <button class="product-view-btn">Quick View</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Collagen Serum -->
+                <div class="product-card" data-category="skincare" data-desc="A lightweight, hyper-concentrated facial treatment that goes deep to address fine lines, active wrinkles, and texture irregularities. Contains plant-derived collagen peptides, skin-plumping Hyaluronic Acid, and soothing Green Tea extracts. Cruelty-free and formulated without parabens.">
+                    <div class="product-image-box">
+                        <svg viewBox="0 0 280 280" width="100%" height="100%">
+                            <rect width="100%" height="100%" fill="#E3EAE0" />
+                            <!-- Amber serum bottle with dropper -->
+                            <rect x="105" y="100" width="70" height="110" fill="#1E293B" rx="12" />
+                            <rect x="125" y="70" width="30" height="30" fill="#C5A880" rx="3" />
+                            <ellipse cx="140" cy="70" rx="15" ry="10" fill="#8E9F85" />
+                            <line x1="140" y1="50" x2="140" y2="70" stroke="#8E9F85" stroke-width="3"/>
+                            <rect x="115" y="130" width="50" height="40" fill="#FAF9F6" rx="2" />
+                            <text x="140" y="155" fill="#1E293B" font-family="'Outfit', sans-serif" font-size="10" font-weight="700" text-anchor="middle">COLLAGEN</text>
+                        </svg>
+                        <span class="product-badge">New Arrival</span>
+                    </div>
+                    <div class="product-content">
+                        <span class="product-category">Skincare / Anti-Aging</span>
+                        <h3 class="product-title">Collagen Boost Skin Plumping Serum</h3>
+                        <div class="product-footer">
+                            <span class="product-price">₹890</span>
+                            <button class="product-view-btn">Quick View</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slimming Gel -->
+                <div class="product-card" data-category="slimming" data-desc="Clinically formulated with herbal skin-tightening agents, active caffeine extract, and cold-pressed orange peel oil. Designed to stimulate metabolic micro-circulation, firm saggy skin, and help reduce the appearance of cellular fat pockets around the thighs, stomach, and arms. Use daily after showering for best results.">
+                    <div class="product-image-box">
+                        <svg viewBox="0 0 280 280" width="100%" height="100%">
+                            <rect width="100%" height="100%" fill="#FAF9F6" />
+                            <!-- Slimming gel tube outline -->
+                            <path d="M 100,70 L 180,70 L 160,200 L 120,200 Z" fill="#8E9F85" />
+                            <rect x="115" y="200" width="50" height="15" fill="#1E293B" rx="2" />
+                            <line x1="100" y1="70" x2="180" y2="70" stroke="#FAF9F6" stroke-width="4"/>
+                            <text x="140" y="135" fill="white" font-family="'Outfit', sans-serif" font-size="12" font-weight="700" text-anchor="middle">SHAPE UP</text>
+                            <text x="140" y="150" fill="#FAF9F6" font-family="'Inter', sans-serif" font-size="8" text-anchor="middle">SLIMMING GEL</text>
+                        </svg>
+                        <span class="product-badge">Specialist</span>
+                    </div>
+                    <div class="product-content">
+                        <span class="product-category">Slimming / Body shaping</span>
+                        <h3 class="product-title">Shape Up Anti-Cellulite Slimming Gel</h3>
+                        <div class="product-footer">
+                            <span class="product-price">₹1,150</span>
+                            <button class="product-view-btn">Quick View</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sunscreen Matte SPF 50 -->
+                <div class="product-card" data-category="skincare" data-desc="Broad-spectrum UVA/UVB protection with an ultra-lightweight, non-greasy matte finish. Rich in carrot seed oil and cooling cucumber extracts to prevent sunburn, tanning, and premature photo-aging. Water-resistant, sweat-proof, and suitable for oily and sensitive skin structures.">
+                    <div class="product-image-box">
+                        <svg viewBox="0 0 280 280" width="100%" height="100%">
+                            <rect width="100%" height="100%" fill="#FDFCF7" />
+                            <!-- Sunscreen tube -->
+                            <path d="M 100,60 L 180,60 L 160,200 L 120,200 Z" fill="#C5A880" />
+                            <rect x="115" y="200" width="50" height="15" fill="#A88F66" rx="2" />
+                            <circle cx="140" cy="115" r="22" fill="#FAF9F6" />
+                            <text x="140" y="120" fill="#121A2A" font-family="'Outfit', sans-serif" font-size="11" font-weight="800" text-anchor="middle">SPF 50</text>
+                        </svg>
+                    </div>
+                    <div class="product-content">
+                        <span class="product-category">Skincare / UV Shield</span>
+                        <h3 class="product-title">Matte Look Broad-Spectrum Sunscreen</h3>
+                        <div class="product-footer">
+                            <span class="product-price">₹450</span>
+                            <button class="product-view-btn">Quick View</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rosemary Shampoo -->
+                <div class="product-card" data-category="haircare" data-desc="A scalp-balancing and root-rejuvenating hair wash containing pure rosemary essential oil, organic tea tree leaf extract, and fortifying hydrolyzed wheat protein. Gently cleanses sebum and flakes, stimulates scalp blood circulation, and strengthens hair follicles.">
+                    <div class="product-image-box">
+                        <svg viewBox="0 0 280 280" width="100%" height="100%">
+                            <rect width="100%" height="100%" fill="#E6EDEB" />
+                            <!-- Tall green shampoo bottle -->
+                            <rect x="110" y="70" width="60" height="150" fill="#1E293B" rx="10" />
+                            <rect x="125" y="50" width="30" height="20" fill="#8E9F85" rx="3" />
+                            <rect x="120" y="100" width="40" height="50" fill="#FAF9F6" rx="2" />
+                            <text x="140" y="125" fill="#8E9F85" font-family="'Outfit', sans-serif" font-size="10" font-weight="700" text-anchor="middle">ROSEMARY</text>
+                        </svg>
+                    </div>
+                    <div class="product-content">
+                        <span class="product-category">Haircare / Dandruff Control</span>
+                        <h3 class="product-title">Dandruff Control Rosemary Shampoo</h3>
+                        <div class="product-footer">
+                            <span class="product-price">₹550</span>
+                            <button class="product-view-btn">Quick View</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick View Modal Container -->
+    <div class="modal" id="productQuickViewModal">
+        <div class="modal-content">
+            <button class="modal-close" aria-label="Close modal"><i class="fas fa-times"></i></button>
+            <div class="grid-2" style="gap: 0;">
+                <div class="modal-image-panel" style="background: #F8FAFC; display: flex; align-items: center; justify-content: center; min-height: 350px;">
+                    <img id="modalProductImage" src="" alt="VLCC Product Image" style="width: 100%; height: 100%; object-fit: contain;">
+                </div>
+                
+                <div class="modal-info-panel" style="padding: 40px; display: flex; flex-direction: column; justify-content: center;">
+                    <span class="section-tag" id="modalProductCategory" style="margin-bottom: 8px;">Skincare</span>
+                    <h3 id="modalProductTitle" style="font-size: 26px; margin-bottom: 16px;">Product Title</h3>
+                    
+                    <div style="display: flex; gap: 4px; color: var(--primary); margin-bottom: 15px; font-size: 14px;">
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star"></i>
+                        <i class="fa-solid fa-star-half-stroke"></i>
+                        <span style="color: var(--text-muted); margin-left: 8px; font-size: 13px;">(48 client ratings)</span>
+                    </div>
+
+                    <p id="modalProductDesc" style="color: var(--text-muted); font-size: 14px; margin-bottom: 25px; line-height: 1.6;">
+                        Product description goes here.
+                    </p>
+                    
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-top: auto; border-top: 1.5px solid #F1F5F9; padding-top: 20px;">
+                        <span id="modalProductPrice" style="font-size: 24px; font-weight: 700; color: var(--secondary);">₹0.00</span>
+                        <button class="btn btn-primary" onclick="alert('Mockup Cart: Product added to bag!'); document.getElementById('productQuickViewModal').classList.remove('active');" style="padding: 12px 28px; font-size: 14px;">Add to Bag</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <span>VLCC</span> Wellness
+                    </div>
+                    <p style="color: #94A3B8; margin-bottom: 20px;">
+                        Established in 1989, VLCC has become a pioneer in beauty, slimming, and wellness solutions across Asia and the GCC region.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="services.html">Our Services</a></li>
+                        <li><a href="products.html">Wellness Shop</a></li>
+                        <li><a href="book.html">Book Consultation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Our Services</h4>
+                    <ul>
+                        <li><a href="services.html?category=slimming">Weight Contouring</a></li>
+                        <li><a href="services.html?category=dermatology">Aesthetic Dermatology</a></li>
+                        <li><a href="services.html?category=salon">Salon & Grooming</a></li>
+                        <li><a href="services.html?category=dermatology">Laser Hair Reduction</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col footer-newsletter">
+                    <h4>Join Our Community</h4>
+                    <p>Subscribe to receive science-backed health insights and exclusive VLCC clinic offers.</p>
+                    <form class="newsletter-form" id="newsletterForm" onsubmit="event.preventDefault(); alert('Thank you for subscribing to VLCC newsletter!'); this.reset();">
+                        <input type="email" placeholder="Your Email Address" required>
+                        <button type="submit">Join</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 VLCC Personal Care & Wellness. All Rights Reserved. Designed with clinical care.</p>
+                <div style="display: flex; gap: 20px;">
+                    <a href="#" style="color: #64748B;"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" style="color: #64748B;"><i class="fab fa-instagram"></i></a>
+                    <a href="#" style="color: #64748B;"><i class="fab fa-twitter"></i></a>
+                    <a href="#" style="color: #64748B;"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script File -->
+    <script src="script.js"></script>
+</body>
+</html>
