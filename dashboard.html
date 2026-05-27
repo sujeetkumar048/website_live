@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinic Dashboard | VLCC Admin Administration</title>
+    <!-- FontAwesome & Custom CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Administration Specific Styling */
+        .dashboard-body {
+            background-color: #FAF9F6;
+            padding-top: 120px;
+            min-height: 100vh;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .dashboard-title h1 {
+            font-size: 36px;
+            color: var(--secondary);
+            font-weight: 800;
+        }
+
+        .dashboard-title p {
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        .refresh-btn {
+            background-color: var(--primary);
+            color: var(--secondary);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .refresh-btn:hover {
+            background-color: var(--secondary);
+            color: var(--text-light);
+            transform: translateY(-2px);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 1200px) {
+            .stats-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .stat-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(197, 168, 128, 0.1);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .stat-card h3 {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .stat-card .value {
+            font-size: 36px;
+            font-family: var(--font-heading);
+            font-weight: 800;
+            color: var(--secondary);
+            line-height: 1;
+        }
+
+        .stat-card .value.gold {
+            color: var(--primary-dark);
+        }
+        
+        .stat-card .value.green {
+            color: var(--accent);
+        }
+
+        /* Table Card Container */
+        .table-card {
+            background: var(--bg-white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(197, 168, 128, 0.1);
+            padding: 30px;
+            margin-bottom: 60px;
+        }
+
+        .table-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .table-search {
+            position: relative;
+            max-width: 320px;
+            width: 100%;
+        }
+
+        .table-search input {
+            width: 100%;
+            padding: 10px 16px 10px 42px;
+            border-radius: 50px;
+            border: 1.5px solid #E2E8F0;
+            font-size: 14px;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .table-search input:focus {
+            border-color: var(--primary);
+        }
+
+        .table-search i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .table-filters {
+            display: flex;
+            gap: 12px;
+        }
+
+        .table-filters select {
+            padding: 10px 16px;
+            border-radius: 50px;
+            border: 1.5px solid #E2E8F0;
+            font-size: 14px;
+            font-family: var(--font-body);
+            background-color: white;
+            outline: none;
+            color: var(--secondary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .table-filters select:focus {
+            border-color: var(--primary);
+        }
+
+        /* Responsive Table */
+        .table-responsive-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            color: var(--secondary);
+            padding: 16px;
+            border-bottom: 2px solid #E2E8F0;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #F1F5F9;
+            color: var(--text-dark);
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background-color: #FAF9F6;
+        }
+
+        /* Status Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-booking {
+            background-color: rgba(197, 168, 128, 0.15);
+            color: var(--primary-dark);
+        }
+
+        .badge-news {
+            background-color: rgba(142, 159, 133, 0.15);
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+
+    <!-- Floating Navigation Bar -->
+    <header class="scrolled">
+        <div class="container nav-container">
+            <a href="index.html" class="logo" id="headerLogo">
+                <span>VLCC</span> Wellness
+            </a>
+            <nav>
+                <ul class="nav-links" id="navbarLinks">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="products.html">Shop Products</a></li>
+                    <li><a href="dashboard.html" class="active">Admin Dashboard</a></li>
+                </ul>
+            </nav>
+            <div class="menu-toggle" id="mobileMenuToggle">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Main Area -->
+    <main class="container">
+        <div class="dashboard-header">
+            <div class="dashboard-title">
+                <h1>Clinic Control Panel</h1>
+                <p>Real-time client consultations, registrations, and sheet synchronization.</p>
+            </div>
+            <button class="refresh-btn" id="refreshDashboardBtn">
+                <i class="fas fa-sync-alt"></i> Refresh Data
+            </button>
+        </div>
+
+        <!-- KPIs Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Bookings</h3>
+                <div class="value gold" id="statTotalBookings">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Active Subscribers</h3>
+                <div class="value green" id="statTotalNewsletters">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Delhi GK Center</h3>
+                <div class="value" id="statDelhiCount">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Mumbai Bandra</h3>
+                <div class="value" id="statMumbaiCount">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Bangalore Indira</h3>
+                <div class="value" id="statBlrCount">0</div>
+            </div>
+        </div>
+
+        <!-- Data Table Card -->
+        <div class="table-card">
+            <div class="table-controls">
+                <div class="table-search">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="dashboardSearch" placeholder="Search by name, contact, clinic...">
+                </div>
+                
+                <div class="table-filters">
+                    <select id="filterType">
+                        <option value="all">All Submissions</option>
+                        <option value="book">Consultations Only</option>
+                        <option value="news">Subscribers Only</option>
+                    </select>
+                    
+                    <select id="filterLocation">
+                        <option value="all">All Clinics</option>
+                        <option value="Delhi">Delhi GK Clinic</option>
+                        <option value="Mumbai">Mumbai Bandra Clinic</option>
+                        <option value="Bangalore">Bangalore Indiranagar</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Scrollable Table -->
+            <div class="table-responsive-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Patient / Client</th>
+                            <th>Category</th>
+                            <th>Contact Info</th>
+                            <th>Desired Program</th>
+                            <th>Selected Clinic</th>
+                            <th>Scheduled Slot</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dashboardTableBody">
+                        <!-- Filled dynamically by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <span>VLCC</span> Wellness
+                    </div>
+                    <p style="color: #94A3B8; margin-bottom: 20px;">
+                        Established in 1989, VLCC has become a pioneer in beauty, slimming, and wellness solutions across Asia and the GCC region.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="services.html">Our Services</a></li>
+                        <li><a href="products.html">Wellness Shop</a></li>
+                        <li><a href="book.html">Book Consultation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Our Services</h4>
+                    <ul>
+                        <li><a href="services.html?category=slimming">Weight Contouring</a></li>
+                        <li><a href="services.html?category=dermatology">Aesthetic Dermatology</a></li>
+                        <li><a href="services.html?category=salon">Salon & Grooming</a></li>
+                        <li><a href="services.html?category=dermatology">Laser Hair Reduction</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col footer-newsletter">
+                    <h4>Join Our Community</h4>
+                    <p>Subscribe to receive science-backed health insights and exclusive VLCC clinic offers.</p>
+                    <form class="newsletter-form" id="newsletterForm" onsubmit="event.preventDefault(); alert('Thank you for subscribing to VLCC newsletter!'); this.reset();">
+                        <input type="email" placeholder="Your Email Address" required>
+                        <button type="submit">Join</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 VLCC Personal Care & Wellness. All Rights Reserved. Designed with clinical care.</p>
+                <div style="display: flex; gap: 20px;">
+                    <a href="#" style="color: #64748B;"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" style="color: #64748B;"><i class="fab fa-instagram"></i></a>
+                    <a href="#" style="color: #64748B;"><i class="fab fa-twitter"></i></a>
+                    <a href="#" style="color: #64748B;"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Script File -->
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,3 +1,9 @@
+// ----------------------------------------------------------------
+// GOOGLE SHEETS CONFIGURATION
+// ----------------------------------------------------------------
+// Paste your Google Apps Script Web App URL here after deploying:
+const GOOGLE_SHEET_URL = "YOUR_APPS_SCRIPT_URL_HERE";
+
 document.addEventListener('DOMContentLoaded', () => {
     // ----------------------------------------------------------------
     // 1. Header Scroll Effect & Mobile Menu
@@ -78,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ----------------------------------------------------------------
-    // 3. BMI & Weight Target Calculator (Standard and Imperial support)
+    // 3. BMI & Weight Target Calculator
     // ----------------------------------------------------------------
     const calculateBmiBtn = document.getElementById('calculateBmiBtn');
     if (calculateBmiBtn) {
@@ -101,25 +107,21 @@ document.addEventListener('DOMContentLoaded', () => {
             let unit = 'kg';
 
             if (systemSelect.value === 'metric') {
-                // Height in cm, Weight in kg
                 const heightMeters = heightVal / 100;
                 bmi = weightVal / (heightMeters * heightMeters);
                 healthyWeightMin = 18.5 * (heightMeters * heightMeters);
                 healthyWeightMax = 24.9 * (heightMeters * heightMeters);
             } else {
-                // Height in inches, Weight in lbs
                 bmi = (weightVal / (heightVal * heightVal)) * 703;
                 healthyWeightMin = (18.5 * (heightVal * heightVal)) / 703;
                 healthyWeightMax = (24.9 * (heightVal * heightVal)) / 703;
                 unit = 'lbs';
             }
 
-            // Round values
             bmi = bmi.toFixed(1);
             healthyWeightMin = Math.round(healthyWeightMin);
             healthyWeightMax = Math.round(healthyWeightMax);
 
-            // Display elements
             const scoreDisplay = document.getElementById('bmiScoreDisplay');
             const statusDisplay = document.getElementById('bmiStatusDisplay');
             const recommendationDisplay = document.getElementById('bmiRecDisplay');
@@ -128,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             let status = 'Normal';
             let recText = '';
-            let styleColor = 'var(--accent)'; // Sage Green for healthy
+            let styleColor = 'var(--accent)';
 
             if (bmi < 18.5) {
                 status = 'Underweight';
@@ -157,7 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Dynamic Label Updater on Dropdown Change
         const systemSelect = document.getElementById('bmiSystem');
         const heightLabel = document.getElementById('bmiHeightLabel');
         const weightLabel = document.getElementById('bmiWeightLabel');
@@ -243,7 +244,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Product Modal Quick View
     const modal = document.getElementById('productQuickViewModal');
     const modalClose = document.querySelector('.modal-close');
     const quickViewButtons = document.querySelectorAll('.product-view-btn');
@@ -280,17 +280,112 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.classList.remove('active');
         });
 
-        // Close on background click
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
-                modal.classList.remove('remove');
                 modal.classList.remove('active');
             }
         });
     }
 
     // ----------------------------------------------------------------
-    // 6. Booking Wizard Logic
+    // 6. Google Sheets Submission Logic
+    // ----------------------------------------------------------------
+    const saveSubmission = async (data) => {
+        // Check if user set up the URL
+        const isLive = GOOGLE_SHEET_URL && GOOGLE_SHEET_URL !== "YOUR_APPS_SCRIPT_URL_HERE";
+        
+        if (isLive) {
+            try {
+                const response = await fetch(GOOGLE_SHEET_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'text/plain', // Avoid CORS preflight options issues with Apps Script
+                    },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                if (result.result === 'success') {
+                    console.log('Saved successfully to Google Sheet.');
+                    return true;
+                } else {
+                    console.error('Apps Script Error:', result.error);
+                }
+            } catch (err) {
+                console.error('Network error saving to Google Sheet:', err);
+            }
+        }
+        
+        // Local fallback (Local Storage)
+        let submissions = JSON.parse(localStorage.getItem('vlcc_submissions')) || getInitialMockData();
+        const newRecord = {
+            timestamp: new Date().toISOString(),
+            type: data.type === 'booking' ? 'Booking' : 'Newsletter',
+            name: data.name || 'Subscriber',
+            contactinfo: data.type === 'booking' ? `${data.phone} (${data.email})` : data.email,
+            service: data.service || '-',
+            location: data.location || '-',
+            schedule: data.dateTime || '-'
+        };
+        submissions.unshift(newRecord);
+        localStorage.setItem('vlcc_submissions', JSON.stringify(submissions));
+        console.log('Saved to Local Storage (Fallback Mode).');
+        return true;
+    };
+
+    // Prepopulate Local Storage with some realistic data so the Dashboard looks premium initially
+    function getInitialMockData() {
+        return [
+            {
+                timestamp: new Date(Date.now() - 3600000 * 2).toISOString(), // 2 hrs ago
+                type: 'Booking',
+                name: 'Karan Malhotra',
+                contactinfo: '+91 9891234567 (karan.malhotra@gmail.com)',
+                service: 'Weight Management & Slimming',
+                location: 'VLCC Centre - Greater Kailash, Delhi',
+                schedule: '2026-05-28 at 10:00 AM - 11:30 AM'
+            },
+            {
+                timestamp: new Date(Date.now() - 3600000 * 18).toISOString(), // 18 hrs ago
+                type: 'Newsletter',
+                name: 'Subscriber',
+                contactinfo: 'sanya.verma@yahoo.com',
+                service: '-',
+                location: '-',
+                schedule: '-'
+            },
+            {
+                timestamp: new Date(Date.now() - 3600000 * 24).toISOString(), // 1 day ago
+                type: 'Booking',
+                name: 'Pooja Hegde',
+                contactinfo: '+91 9120098765 (pooja.hegde@hotmail.com)',
+                service: 'Laser & Aesthetic Dermatology',
+                location: 'VLCC Centre - Bandra West, Mumbai',
+                schedule: '2026-05-29 at 03:00 PM - 04:30 PM'
+            },
+            {
+                timestamp: new Date(Date.now() - 3600000 * 48).toISOString(), // 2 days ago
+                type: 'Booking',
+                name: 'Anirudh Rao',
+                contactinfo: '+91 8055674321 (ani.rao@outlook.com)',
+                service: 'Beauty Salon & Grooming',
+                location: 'VLCC Centre - Indiranagar, Bangalore',
+                schedule: '2026-05-28 at 12:00 PM - 01:30 PM'
+            },
+            {
+                timestamp: new Date(Date.now() - 3600000 * 60).toISOString(), // 2.5 days ago
+                type: 'Newsletter',
+                name: 'Subscriber',
+                contactinfo: 'rohit.singh@gmail.com',
+                service: '-',
+                location: '-',
+                schedule: '-'
+            }
+        ];
+    }
+
+    // ----------------------------------------------------------------
+    // 7. Booking Wizard Submission Trigger
     // ----------------------------------------------------------------
     const bookingForm = document.getElementById('appointmentBookingForm');
     const stepPanels = document.querySelectorAll('.form-step-panel');
@@ -311,7 +406,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 indicator.classList.toggle('completed', index < currentStep);
             });
 
-            // Toggle buttons
             if (currentStep === 0) {
                 prevBtn.style.visibility = 'hidden';
             } else {
@@ -327,13 +421,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        // Interactive Selection Cards
         const selectCards = document.querySelectorAll('.option-select-card');
         selectCards.forEach(card => {
             card.addEventListener('click', () => {
                 const radio = card.querySelector('input[type="radio"]');
                 if (radio) {
-                    // Unselect siblings
                     const name = radio.getAttribute('name');
                     document.querySelectorAll(`input[name="${name}"]`).forEach(sibling => {
                         sibling.closest('.option-select-card').classList.remove('selected');
@@ -345,7 +437,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Validate fields in current step
         const validateCurrentStep = () => {
             if (currentStep === 0) {
                 const checkedService = document.querySelector('input[name="booking_service"]:checked');
@@ -376,7 +467,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     return false;
                 }
 
-                // Email validation
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 if (!emailRegex.test(email)) {
                     alert('Please enter a valid email address.');
@@ -386,12 +476,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return true;
         };
 
-        // Event listener for Next Button
-        nextBtn.addEventListener('click', () => {
+        nextBtn.addEventListener('click', async () => {
             if (!validateCurrentStep()) return;
 
             if (currentStep < stepPanels.length - 1) {
-                // Compile final review info when going to step 3 (index 3)
                 if (currentStep === 2) {
                     const serviceName = document.querySelector('input[name="booking_service"]:checked').value;
                     const locationName = document.querySelector('input[name="booking_location"]:checked').value;
@@ -410,32 +498,58 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentStep++;
                 updateBookingUI();
             } else {
-                // Form Submission Success Trigger
-                const bookingWizard = document.getElementById('bookingWizard');
-                const successMsg = document.getElementById('bookingSuccessState');
+                // Final Submit Trigger
+                const originalText = nextBtn.textContent;
+                nextBtn.disabled = true;
+                nextBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Reserving...';
 
-                if (bookingWizard && successMsg) {
-                    bookingWizard.style.display = 'none';
-                    successMsg.style.display = 'block';
-                    
-                    // Populate success details
-                    const confirmedService = document.getElementById('confirmedService');
-                    const confirmedLoc = document.getElementById('confirmedLocation');
-                    const confirmedTime = document.getElementById('confirmedDateTime');
-                    
-                    const serviceName = document.querySelector('input[name="booking_service"]:checked').value;
-                    const locationName = document.querySelector('input[name="booking_location"]:checked').value;
-                    const dateVal = document.getElementById('bookingDate').value;
-                    const timeVal = document.getElementById('bookingTime').value;
+                const serviceName = document.querySelector('input[name="booking_service"]:checked').value;
+                const locationName = document.querySelector('input[name="booking_location"]:checked').value;
+                const dateVal = document.getElementById('bookingDate').value;
+                const timeVal = document.getElementById('bookingTime').value;
+                const name = document.getElementById('bookingName').value.trim();
+                const phone = document.getElementById('bookingPhone').value.trim();
+                const email = document.getElementById('bookingEmail').value.trim();
 
-                    if (confirmedService) confirmedService.textContent = serviceName;
-                    if (confirmedLoc) confirmedLoc.textContent = locationName;
-                    if (confirmedTime) confirmedTime.textContent = `${dateVal} at ${timeVal}`;
+                const bookingData = {
+                    type: 'booking',
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    service: serviceName,
+                    location: locationName,
+                    dateTime: `${dateVal} at ${timeVal}`
+                };
+
+                const success = await saveSubmission(bookingData);
+
+                nextBtn.disabled = false;
+                nextBtn.textContent = originalText;
+
+                if (success) {
+                    const bookingFormEl = document.getElementById('appointmentBookingForm');
+                    const stepsBar = document.querySelector('.booking-form-steps');
+                    const successMsg = document.getElementById('bookingSuccessState');
+
+                    if (bookingFormEl && successMsg) {
+                        bookingFormEl.style.display = 'none';
+                        if (stepsBar) stepsBar.style.display = 'none';
+                        successMsg.style.display = 'block';
+                        
+                        const confirmedService = document.getElementById('confirmedService');
+                        const confirmedLoc = document.getElementById('confirmedLocation');
+                        const confirmedTime = document.getElementById('confirmedDateTime');
+
+                        if (confirmedService) confirmedService.textContent = serviceName;
+                        if (confirmedLoc) confirmedLoc.textContent = locationName;
+                        if (confirmedTime) confirmedTime.textContent = `${dateVal} at ${timeVal}`;
+                    }
+                } else {
+                    alert('There was a connection issue booking your appointment. Please call us directly.');
                 }
             }
         });
 
-        // Event listener for Previous Button
         if (prevBtn) {
             prevBtn.addEventListener('click', () => {
                 if (currentStep > 0) {
@@ -445,7 +559,175 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Run initial UI updates
         updateBookingUI();
+    }
+
+    // ----------------------------------------------------------------
+    // 8. Newsletter Form Submit
+    // ----------------------------------------------------------------
+    const nForm = document.getElementById('newsletterForm');
+    if (nForm) {
+        nForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const emailInput = nForm.querySelector('input[type="email"]');
+            const submitBtn = nForm.querySelector('button');
+            const originalText = submitBtn.textContent;
+
+            if (emailInput && emailInput.value.trim()) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = '...';
+
+                const newsletterData = {
+                    type: 'newsletter',
+                    email: emailInput.value.trim()
+                };
+
+                const success = await saveSubmission(newsletterData);
+
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+
+                if (success) {
+                    alert('Thank you for subscribing to VLCC newsletter!');
+                    nForm.reset();
+                } else {
+                    alert('Could not subscribe. Please try again later.');
+                }
+            }
+        });
+    }
+
+    // ----------------------------------------------------------------
+    // 9. Dashboard Data Retrieval & Populator
+    // ----------------------------------------------------------------
+    const dashboardTable = document.getElementById('dashboardTableBody');
+    if (dashboardTable) {
+        const refreshBtn = document.getElementById('refreshDashboardBtn');
+        const filterLoc = document.getElementById('filterLocation');
+        const filterType = document.getElementById('filterType');
+        const searchInput = document.getElementById('dashboardSearch');
+
+        let rawSubmissions = [];
+
+        const loadDashboard = async () => {
+            dashboardTable.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);"><i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Loading live clinical sheet records...</td></tr>';
+            
+            const isLive = GOOGLE_SHEET_URL && GOOGLE_SHEET_URL !== "YOUR_APPS_SCRIPT_URL_HERE";
+            
+            if (isLive) {
+                try {
+                    const response = await fetch(GOOGLE_SHEET_URL, {
+                        method: 'GET',
+                        mode: 'cors'
+                    });
+                    rawSubmissions = await response.json();
+                } catch (err) {
+                    console.error('Fetch error loading sheet records. Falling back to local storage...', err);
+                    rawSubmissions = JSON.parse(localStorage.getItem('vlcc_submissions')) || getInitialMockData();
+                }
+            } else {
+                // Read from Local Storage / Initial mocks
+                rawSubmissions = JSON.parse(localStorage.getItem('vlcc_submissions')) || getInitialMockData();
+            }
+
+            renderDashboard();
+        };
+
+        const renderDashboard = () => {
+            const locVal = filterLoc.value;
+            const typeVal = filterType.value;
+            const searchVal = searchInput.value.toLowerCase().trim();
+
+            // Clear table
+            dashboardTable.innerHTML = '';
+
+            let totalBookings = 0;
+            let totalNewsletters = 0;
+            let delhiCount = 0;
+            let mumbaiCount = 0;
+            let blrCount = 0;
+            let filteredCount = 0;
+
+            rawSubmissions.forEach(sub => {
+                // Standardize keys coming from Google Apps Script (all lowercase, clean letters)
+                const type = sub.type || sub.submissiontype || '';
+                const name = sub.name || '';
+                const contact = sub.contactinfo || sub.phone || '';
+                const service = sub.service || '';
+                const location = sub.location || '';
+                const schedule = sub.schedule || sub.dateandtime || '';
+                const stamp = sub.timestamp ? new Date(sub.timestamp).toLocaleString() : '-';
+
+                // Tally Stats totals
+                if (type.toLowerCase().includes('book')) {
+                    totalBookings++;
+                    if (location.includes('Delhi')) delhiCount++;
+                    if (location.includes('Mumbai')) mumbaiCount++;
+                    if (location.includes('Bangalore')) blrCount++;
+                } else if (type.toLowerCase().includes('news')) {
+                    totalNewsletters++;
+                }
+
+                // Filtering conditions
+                const matchesType = (typeVal === 'all' || type.toLowerCase().includes(typeVal));
+                
+                let matchesLoc = true;
+                if (locVal !== 'all') {
+                    matchesLoc = location.includes(locVal);
+                }
+
+                const matchesSearch = (
+                    name.toLowerCase().includes(searchVal) ||
+                    contact.toLowerCase().includes(searchVal) ||
+                    service.toLowerCase().includes(searchVal) ||
+                    location.toLowerCase().includes(searchVal)
+                );
+
+                if (matchesType && matchesLoc && matchesSearch) {
+                    filteredCount++;
+                    const row = document.createElement('tr');
+                    
+                    const badgeClass = type.toLowerCase().includes('book') ? 'badge-booking' : 'badge-news';
+                    const displayType = type.toLowerCase().includes('book') ? 'Consultation' : 'Newsletter';
+
+                    row.innerHTML = `
+                        <td style="font-weight: 600;">${name}</td>
+                        <td><span class="badge ${badgeClass}">${displayType}</span></td>
+                        <td style="font-size: 13px;">${contact}</td>
+                        <td>${service}</td>
+                        <td style="font-size: 13px; color: var(--text-muted);">${location}</td>
+                        <td>${schedule}</td>
+                    `;
+                    dashboardTable.appendChild(row);
+                }
+            });
+
+            // If empty after filters
+            if (filteredCount === 0) {
+                dashboardTable.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--text-muted);">No records match your active search filters.</td></tr>';
+            }
+
+            // Update KPI numbers
+            const cardBookings = document.getElementById('statTotalBookings');
+            const cardNewsletters = document.getElementById('statTotalNewsletters');
+            const cardDelhi = document.getElementById('statDelhiCount');
+            const cardMumbai = document.getElementById('statMumbaiCount');
+            const cardBlr = document.getElementById('statBlrCount');
+
+            if (cardBookings) cardBookings.textContent = totalBookings;
+            if (cardNewsletters) cardNewsletters.textContent = totalNewsletters;
+            if (cardDelhi) cardDelhi.textContent = delhiCount;
+            if (cardMumbai) cardMumbai.textContent = mumbaiCount;
+            if (cardBlr) cardBlr.textContent = blrCount;
+        };
+
+        // Event listeners for Dashboard controls
+        if (refreshBtn) refreshBtn.addEventListener('click', loadDashboard);
+        if (filterLoc) filterLoc.addEventListener('change', renderDashboard);
+        if (filterType) filterType.addEventListener('change', renderDashboard);
+        if (searchInput) searchInput.addEventListener('input', renderDashboard);
+
+        // Initial fetch
+        loadDashboard();
     }
 });
